@@ -102,10 +102,11 @@ export default function Home() {
             <div className="flex items-center justify-between gap-4 mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">
-                  &ldquo;{kw.keyword}&rdquo;
+                  Keyword: &ldquo;{kw.keyword}&rdquo;
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {kw.totalResults?.toLocaleString() ?? "?"} results · Last scraped {new Date(kw.lastScraped).toLocaleString("en")}
+                  {kw.totalResults ? `${kw.totalResults.toLocaleString()} results` : ""}
+                  {kw.totalResults ? " · " : ""}Last scraped {new Date(kw.lastScraped).toLocaleString("en")}
                 </p>
               </div>
               <span className="text-xs text-gray-400">{kw.results.length} positions</span>
