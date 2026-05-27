@@ -1,42 +1,24 @@
 # SERP Rank Tracker
 
-Automated Google Search position monitoring — tracks keyword rankings daily with color-coded position badges and trend visualization.
+Monitors Google Search positions for keywords. Shows current rank, best rank, and position change over time with a color-coded badge (green if top 3, amber if top 10, red otherwise).
 
-![Dashboard Screenshot](https://github.com/prowebleo/serp-tracker/raw/main/screenshot.png)
+## Why
 
-## Features
-
-- **Rank tracking** — Monitors Google organic positions for target keywords
-- **Position badges** — Color-coded (green ≤3, amber ≤10, red >10)
-- **Trend charts** — Recharts area chart with Brush for time range selection
-- **CSV export** — Download ranking data as CSV with one click
-- **Scheduled scraping** — GitHub Action runs daily at 7 AM UTC
+Needed to track how a client's site ranked for specific terms. Built this to automate the checking — the scraper runs at 7 AM UTC daily and pushes results to Turso.
 
 ## Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 15 (App Router) |
-| Database | Turso (libSQL) |
-| Charts | Recharts |
-| Scraping | Automated web scraping pipeline |
-| Scheduling | GitHub Actions |
-| Deployment | Vercel |
+Next.js 15, Turso (libSQL), Recharts, GitHub Actions, Vercel
 
-## Live Demo
+## Live
 
 **[serp-tracker-one.vercel.app](https://serp-tracker-one.vercel.app)**
 
-## Local Development
+## Running locally
 
 ```bash
 npm install
-cp .env.example .env
+# add your keys to .env.local
 npm run dev
-```
-
-## Run Scraper
-
-```bash
 npm run scrape
 ```
