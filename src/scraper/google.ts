@@ -1,10 +1,10 @@
 import type { SERPSnapshot, GoogleResponse, GoogleDirectResult } from "./types"
 
-const API_URL = "https://scraper-api.decodo.com/v2/scrape"
+const API_URL = process.env.SCRAPER_API_URL ?? ""
 
 function getAuth(): string {
-  const token = process.env.DECODO_API_TOKEN
-  if (!token) throw new Error("Falta DECODO_API_TOKEN")
+  const token = process.env.SCRAPER_API_TOKEN
+  if (!token) throw new Error("Falta SCRAPER_API_TOKEN")
   return `Basic ${token}`
 }
 
@@ -33,7 +33,7 @@ export async function scrapeKeyword(keyword: string): Promise<SERPSnapshot[]> {
   })
 
   if (!response.ok) {
-    throw new Error(`Decodo error ${response.status}: ${await response.text()}`)
+    throw new Error(`Scraper error ${response.status}: ${await response.text()}`)
   }
 
   const data: GoogleResponse = await response.json()
