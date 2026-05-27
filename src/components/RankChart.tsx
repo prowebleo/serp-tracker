@@ -20,13 +20,15 @@ type Props = {
 export default function RankChart({ data, keyword }: Props) {
   const chartData = data
     .filter((d) => d.position !== null)
-    .map((d) => ({
-      date: new Date(d.date).toLocaleDateString("en", {
-        month: "short",
-        day: "numeric",
-      }),
-      position: d.position,
-    }))
+    .map((d) => {
+      const dt = new Date(d.date)
+      return {
+        date: dt.toISOString(),
+        label: dt.toLocaleDateString("en", { month: "short", day: "numeric" }) +
+          " " + dt.toLocaleTimeString("en", { hour: "2-digit", minute: "2-digit" }),
+        position: d.position,
+      }
+    })
 
   if (chartData.length === 0) {
     return (
@@ -69,7 +71,7 @@ export default function RankChart({ data, keyword }: Props) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-          <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
           <YAxis
             domain={[yMin, yMax]}
             reversed
@@ -97,7 +99,7 @@ export default function RankChart({ data, keyword }: Props) {
             activeDot={{ r: 5, fill: "#059669", stroke: "#fff", strokeWidth: 2 }}
           />
           <Brush
-            dataKey="date"
+            dataKey="label"
             height={28}
             stroke="#059669"
             fill="#f0fdf4"
