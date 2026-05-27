@@ -30,11 +30,13 @@ export async function saveSnapshot(snapshot: SERPSnapshot) {
   })
 }
 
-export async function getHistory(keyword: string): Promise<Row[]> {
+export async function getHistory(keyword: string, url?: string): Promise<Row[]> {
   const db = await getDb()
   const result = await db.execute({
-    sql: `SELECT * FROM serp_snapshots WHERE keyword = ? ORDER BY scraped_at ASC`,
-    args: [keyword],
+    sql: url
+      ? `SELECT * FROM serp_snapshots WHERE keyword = ? AND url = ? ORDER BY scraped_at ASC`
+      : `SELECT * FROM serp_snapshots WHERE keyword = ? ORDER BY scraped_at ASC`,
+    args: url ? [keyword, url] : [keyword],
   })
   return result.rows as unknown as Row[]
 }
@@ -53,8 +55,8 @@ export async function getAllKeywords(): Promise<Row[]> {
   const db = await getDb()
   const result = await db.execute(`
     SELECT * FROM serp_snapshots WHERE id IN (
-      SELECT MAX(id) FROM serp_snapshots GROUP BY keyword
-    ) ORDER BY scraped_at DESC
+      SELECT MAX(id) FROM serp_snapshots GROUP BY keyword, url
+    ) ORDER BY keyword, position
   `)
   return result.rows as unknown as Row[]
 }

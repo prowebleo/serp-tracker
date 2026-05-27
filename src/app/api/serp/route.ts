@@ -5,39 +5,47 @@ export async function GET() {
   await initDb()
 
   const rows = await getAllKeywords()
-  const result = []
+
+  const grouped = new Map<string, {
+    keyword: string
+    totalResults: number | null
+    lastScraped: string
+    results: { position: number | null; title: string | null; url: string | null; rating: number | null; description: string | null; snapshots: number; history: { date: string; position: number | null }[] }[]
+  }>()
 
   for (const r of rows) {
-    const history = await getHistory(r.keyword)
-    const positions = history.map((h) => ({
-      date: h.scraped_at,
-      position: h.position,
-    }))
+    const history = await getHistory(r.keyword, r.url ?? undefined)
+    const key = r.keyword
 
-    const numericPositions = positions
-      .map((p) => p.position)
-      .filter((p): p is number => p !== null)
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        keyword: key,
+        totalResults: r.total_results,
+        lastScraped: r.scraped_at,
+        results: [],
+      })
+    }
 
-    const best = numericPositions.length ? Math.min(...numericPositions) : null
-    const latest = numericPositions[numericPositions.length - 1] ?? null
-    const first = numericPositions[0] ?? null
-    const change =
-      latest !== null && first !== null
-        ? first - latest
-        : null
+    const entry = grouped.get(key)!
+    if (new Date(r.scraped_at) > new Date(entry.lastScraped)) {
+      entry.lastScraped = r.scraped_at
+    }
 
-    result.push({
-      keyword: r.keyword,
-      currentPosition: r.position,
-      currentTitle: r.title,
-      currentUrl: r.url,
-      currentRating: r.rating,
-      totalResults: r.total_results,
-      lastScraped: r.scraped_at,
-      stats: { best, change, totalSnapshots: history.length },
-      positionHistory: positions,
+    entry.results.push({
+      position: r.position,
+      title: r.title,
+      url: r.url,
+      rating: r.rating,
+      description: r.description,
+      snapshots: history.length,
+      history: history.map((h) => ({ date: h.scraped_at, position: h.position })),
     })
   }
 
-  return Response.json({ keywords: result })
+  const keywords = Array.from(grouped.values()).map((g) => ({
+    ...g,
+    results: g.results.sort((a, b) => (a.position ?? 999) - (b.position ?? 999)),
+  }))
+
+  return Response.json({ keywords })
 }
