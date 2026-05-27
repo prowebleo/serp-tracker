@@ -36,8 +36,9 @@ export default function RankChart({ data, keyword }: Props) {
     )
   }
 
-  const minPos = Math.min(...chartData.map((d) => d.position))
-  const maxPos = Math.max(...chartData.map((d) => d.position))
+  const posValues = chartData.map((d) => d.position).filter((p): p is number => p !== null)
+  const minPos = Math.min(...posValues)
+  const maxPos = Math.max(...posValues)
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
