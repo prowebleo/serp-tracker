@@ -169,7 +169,7 @@ export default function Home() {
               <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500">
                 <span className="flex items-center gap-1.5">
                   <Globe size={14} className="text-gray-400" />
-                  {kw.totalResults?.toLocaleString() ?? "?"} results
+                  {kw.totalResults ? `${kw.totalResults.toLocaleString()} results` : ""}
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Clock size={14} className="text-gray-400" />
