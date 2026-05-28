@@ -4,11 +4,11 @@ Monitors Google Search positions for keywords. Shows current rank, best rank, an
 
 ## Why
 
-Needed to track how a client's site ranked for specific terms. Built this to automate the checking — the scraper runs at 7 AM UTC daily and pushes results to Turso.
+Needed to track how a client's site ranked for specific terms. Built this to automate the checking - the scraper runs at 7 AM UTC daily and pushes results to libSQL.
 
 ## Stack
 
-Next.js 15, Turso (libSQL), Recharts, GitHub Actions, Vercel
+Next.js 15, libSQL, Recharts, GitHub Actions, Vercel
 
 ## Live
 
